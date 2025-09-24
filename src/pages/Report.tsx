@@ -7,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, MapPin, Camera, AlertTriangle, Send } from 'lucide-react';
+import { ArrowLeft, MapPin, Camera, AlertTriangle, Send, X, CheckCircle } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { hazardTypes, severityLevels } from '@/data/mockData';
 
@@ -60,171 +60,209 @@ const Report = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-6">
-        {/* Header */}
-        <div className="flex items-center gap-4 mb-6">
-          <Button variant="ghost" size="sm" onClick={() => navigate(-1)}>
-            <ArrowLeft className="w-4 h-4" />
+      {/* Mobile Header */}
+      <div className="sticky top-0 z-40 bg-background/95 backdrop-blur-lg border-b border-border safe-area-inset-top">
+        <div className="flex items-center gap-4 px-4 py-4">
+          <Button variant="ghost" size="sm" onClick={() => navigate(-1)} className="p-2">
+            <ArrowLeft className="w-5 h-5" />
           </Button>
-          <div>
-            <h1 className="text-2xl font-bold">Report Hazard</h1>
-            <p className="text-muted-foreground">Help keep your community safe</p>
+          <div className="flex-1">
+            <h1 className="text-lg font-bold">Report Hazard</h1>
+            <p className="text-sm text-muted-foreground">Help keep your community safe</p>
           </div>
         </div>
+      </div>
 
-        {/* Report Form */}
-        <Card className="max-w-2xl mx-auto">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <AlertTriangle className="w-5 h-5 text-warning" />
-              Hazard Report Form
-            </CardTitle>
-            <CardDescription>
-              Provide accurate information to help authorities respond effectively
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Hazard Type */}
-              <div className="space-y-2">
-                <Label htmlFor="type">Hazard Type *</Label>
-                <Select onValueChange={(value) => setFormData(prev => ({ ...prev, type: value }))}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select hazard type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {hazardTypes.map((type) => (
-                      <SelectItem key={type.value} value={type.value}>
-                        <span className="flex items-center gap-2">
-                          <span>{type.icon}</span>
-                          {type.label}
-                        </span>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+      <div className="px-4 py-6 pb-24">
+        {/* Emergency Warning */}
+        <Card className="mb-6 border-emergency/20 bg-emergency/5">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-emergency/10 rounded-full flex items-center justify-center flex-shrink-0">
+                <AlertTriangle className="w-5 h-5 text-emergency" />
               </div>
-
-              {/* Severity */}
-              <div className="space-y-2">
-                <Label htmlFor="severity">Severity Level *</Label>
-                <Select onValueChange={(value) => setFormData(prev => ({ ...prev, severity: value }))}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select severity level" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {severityLevels.map((level) => (
-                      <SelectItem key={level.value} value={level.value}>
-                        <div className="flex items-center gap-2">
-                          <div className={`w-3 h-3 rounded-full bg-${level.color}`} />
-                          {level.label}
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {formData.severity && (
-                  <Badge className={`status-${getSeverityColor(formData.severity)} w-fit`}>
-                    {formData.severity.toUpperCase()} SEVERITY
-                  </Badge>
-                )}
-              </div>
-
-              {/* Title */}
-              <div className="space-y-2">
-                <Label htmlFor="title">Report Title *</Label>
-                <Input
-                  id="title"
-                  placeholder="Brief, descriptive title of the hazard"
-                  value={formData.title}
-                  onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                  className="w-full"
-                />
-              </div>
-
-              {/* Description */}
-              <div className="space-y-2">
-                <Label htmlFor="description">Description</Label>
-                <Textarea
-                  id="description"
-                  placeholder="Detailed description of what you're observing..."
-                  rows={4}
-                  value={formData.description}
-                  onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                  className="w-full"
-                />
-              </div>
-
-              {/* Location */}
-              <div className="space-y-2">
-                <Label>Current Location</Label>
-                <div className="flex items-center gap-2 p-3 bg-muted rounded-md">
-                  <MapPin className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm">{formData.location.address}</span>
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  Location detected automatically. Make sure this is accurate.
+              <div>
+                <h3 className="font-semibold text-sm text-emergency">Emergency Guidelines</h3>
+                <p className="text-xs text-muted-foreground mt-1">
+                  If life-threatening, call emergency services first. Then report here to help others.
                 </p>
               </div>
-
-              {/* Media Upload */}
-              <div className="space-y-2">
-                <Label>Add Photo/Video (Optional)</Label>
-                <div className="border-2 border-dashed border-muted rounded-lg p-8 text-center">
-                  <Camera className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
-                  <p className="text-sm text-muted-foreground mb-2">
-                    Tap to add photos or videos of the hazard
-                  </p>
-                  <Button type="button" variant="outline" size="sm">
-                    <Camera className="w-4 h-4 mr-2" />
-                    Add Media
-                  </Button>
-                </div>
-              </div>
-
-              {/* Submit */}
-              <div className="flex flex-col gap-4 pt-4">
-                <Button 
-                  type="submit" 
-                  className="w-full"
-                  variant={formData.severity === 'critical' ? 'emergency' : 'ocean'}
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? (
-                    <>
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                      Submitting Report...
-                    </>
-                  ) : (
-                    <>
-                      <Send className="w-4 h-4 mr-2" />
-                      Submit Report
-                    </>
-                  )}
-                </Button>
-                
-                <p className="text-xs text-muted-foreground text-center">
-                  Your report will be verified by our team and other users. 
-                  Accurate reports improve your credibility score.
-                </p>
-              </div>
-            </form>
+            </div>
           </CardContent>
         </Card>
 
-        {/* Tips Card */}
-        <Card className="max-w-2xl mx-auto mt-6">
+        {/* Report Form */}
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Hazard Type */}
+          <Card>
+            <CardHeader className="pb-4">
+              <Label className="text-base font-semibold">What type of hazard? *</Label>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <div className="grid grid-cols-2 gap-3">
+                {hazardTypes.map((type) => (
+                  <button
+                    key={type.value}
+                    type="button"
+                    onClick={() => setFormData(prev => ({ ...prev, type: type.value }))}
+                    className={`p-4 rounded-xl border-2 text-left transition-all active:scale-95 ${
+                      formData.type === type.value
+                        ? 'border-primary bg-primary/10 text-primary'
+                        : 'border-border hover:border-primary/50'
+                    }`}
+                  >
+                    <div className="text-2xl mb-2">{type.icon}</div>
+                    <div className="font-medium text-sm">{type.label}</div>
+                  </button>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Severity Level */}
+          <Card>
+            <CardHeader className="pb-4">
+              <Label className="text-base font-semibold">How severe is it? *</Label>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <div className="space-y-3">
+                {severityLevels.map((level) => (
+                  <button
+                    key={level.value}
+                    type="button"
+                    onClick={() => setFormData(prev => ({ ...prev, severity: level.value }))}
+                    className={`w-full p-4 rounded-xl border-2 text-left transition-all active:scale-95 ${
+                      formData.severity === level.value
+                        ? `border-${level.color} bg-${level.color}/10`
+                        : 'border-border hover:border-primary/50'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className={`w-4 h-4 rounded-full bg-${level.color}`} />
+                      <div>
+                        <div className="font-medium text-sm">{level.label}</div>
+                        <div className="text-xs text-muted-foreground">
+                          {level.value === 'critical' && 'Immediate danger to life/property'}
+                          {level.value === 'high' && 'Significant risk, avoid area'}
+                          {level.value === 'medium' && 'Moderate risk, use caution'}
+                          {level.value === 'low' && 'Minor risk, be aware'}
+                        </div>
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Title & Description */}
+          <Card>
+            <CardHeader className="pb-4">
+              <Label className="text-base font-semibold">Describe what you see *</Label>
+            </CardHeader>
+            <CardContent className="pt-0 space-y-4">
+              <div>
+                <Label htmlFor="title" className="text-sm text-muted-foreground">Brief title</Label>
+                <Input
+                  id="title"
+                  placeholder="e.g., Street flooding on Marine Drive"
+                  value={formData.title}
+                  onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                  className="mt-1"
+                />
+              </div>
+              
+              <div>
+                <Label htmlFor="description" className="text-sm text-muted-foreground">Details (optional)</Label>
+                <Textarea
+                  id="description"
+                  placeholder="Describe what you're observing in detail..."
+                  rows={3}
+                  value={formData.description}
+                  onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                  className="mt-1"
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Location */}
+          <Card>
+            <CardHeader className="pb-4">
+              <Label className="text-base font-semibold">Location</Label>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <div className="flex items-center gap-3 p-4 bg-muted/50 rounded-xl">
+                <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+                  <MapPin className="w-5 h-5 text-primary" />
+                </div>
+                <div className="flex-1">
+                  <div className="font-medium text-sm">Current Location</div>
+                  <div className="text-xs text-muted-foreground">{formData.location.address}</div>
+                </div>
+                <div className="w-2 h-2 bg-safe rounded-full" />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Media Upload */}
+          <Card>
+            <CardHeader className="pb-4">
+              <Label className="text-base font-semibold">Add Photo/Video</Label>
+              <p className="text-sm text-muted-foreground">Optional but helps verification</p>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <div className="border-2 border-dashed border-muted-foreground/25 rounded-xl p-8 text-center">
+                <Camera className="w-8 h-8 text-muted-foreground mx-auto mb-3" />
+                <p className="text-sm text-muted-foreground mb-4">
+                  Tap to add photos or videos of the hazard
+                </p>
+                <Button type="button" variant="outline" size="sm">
+                  <Camera className="w-4 h-4 mr-2" />
+                  Take Photo
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Submit Button */}
+          <div className="sticky bottom-20 bg-background/95 backdrop-blur-lg -mx-4 px-4 py-4 border-t border-border">
+            <Button 
+              type="submit" 
+              className="w-full h-14 text-lg font-semibold"
+              variant={formData.severity === 'critical' ? 'emergency' : 'ocean'}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <>
+                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-3" />
+                  Submitting Report...
+                </>
+              ) : (
+                <>
+                  <Send className="w-5 h-5 mr-3" />
+                  Submit Emergency Report
+                </>
+              )}
+            </Button>
+          </div>
+        </form>
+
+        {/* Tips */}
+        <Card className="mt-6">
           <CardHeader>
-            <CardTitle className="text-lg">Reporting Tips</CardTitle>
+            <CardTitle className="text-base flex items-center gap-2">
+              <CheckCircle className="w-5 h-5 text-safe" />
+              Reporting Tips
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
-            <ul className="text-sm text-muted-foreground space-y-1">
-              <li>• Be as specific as possible with your description</li>
-              <li>• Include photos or videos when safe to do so</li>
-              <li>• Report only what you can directly observe</li>
-              <li>• Choose the appropriate severity level honestly</li>
-              <li>• Ensure your location is accurate for proper alerts</li>
-            </ul>
+            <div className="text-sm text-muted-foreground space-y-1">
+              <p>• Be as specific as possible with your description</p>
+              <p>• Include photos or videos when safe to do so</p>
+              <p>• Report only what you can directly observe</p>
+              <p>• Choose the appropriate severity level honestly</p>
+            </div>
           </CardContent>
         </Card>
       </div>

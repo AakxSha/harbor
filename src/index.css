@@ -185,9 +185,63 @@ Ocean-themed colors with emergency response focus. All colors MUST be HSL.
   50% { opacity: 0.8; transform: scale(1.05); }
 }
 
-/* Emergency Status Styles */
+/* Mobile App Utilities */
 @layer utilities {
-  .status-emergency { @apply bg-emergency text-emergency-foreground; }
-  .status-warning { @apply bg-warning text-warning-foreground; }
-  .status-safe { @apply bg-safe text-safe-foreground; }
+  .safe-area-inset-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  .safe-area-inset-top {
+    padding-top: env(safe-area-inset-top);
+  }
+  
+  .mobile-header-height {
+    height: calc(4rem + env(safe-area-inset-top));
+  }
+  
+  .mobile-content-padding {
+    padding-top: calc(4rem + env(safe-area-inset-top));
+    padding-bottom: calc(6rem + env(safe-area-inset-bottom));
+  }
+  
+  .glass-blur {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  
+  .touch-action-manipulation {
+    touch-action: manipulation;
+  }
+}
+
+/* Enhanced Mobile Animations */
+@layer utilities {
+  .bounce-in {
+    animation: bounceIn 0.3s ease-out;
+  }
+  
+  .slide-up {
+    animation: slideUp 0.3s ease-out;
+  }
+  
+  .fade-in-up {
+    animation: fadeInUp 0.4s ease-out;
+  }
+}
+
+@keyframes bounceIn {
+  0% { transform: scale(0.3); opacity: 0; }
+  50% { transform: scale(1.05); }
+  70% { transform: scale(0.9); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes slideUp {
+  0% { transform: translateY(20px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  0% { transform: translateY(30px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
 }
